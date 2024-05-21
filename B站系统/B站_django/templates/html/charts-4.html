@@ -1,0 +1,125 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="favicon.ico" >
+<link rel="Shortcut Icon" href="favicon.ico" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="../../static/hui/lib/html5shiv.js"></script>
+<script type="text/javascript" src="../../static/hui/lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../../static/hui/static/h-ui/css/H-ui.min.css" />
+<!--<link rel="stylesheet" type="text/css" href="../../static/hui/static/h-ui.admin/css/H-ui.admin.css" />-->
+<link rel="stylesheet" type="text/css" href="../../static/hui/lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="../../static/hui/static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="../../static/hui/static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="../../static/hui/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script><![endif]-->
+<!--/meta 作为公共模版分离出去-->
+
+<title>柱状图</title>
+</head>
+<body>
+<!--_header 作为公共模版分离出去-->
+<!--/_header 作为公共模版分离出去-->
+
+<!--_menu 作为公共模版分离出去-->
+<!--/_menu 作为公共模版分离出去-->
+
+<section class="Hui-article-box">
+	<div class="Hui-article">
+		<article class="cl pd-20">
+			<div id="container" style="min-width:700px;height:400px"></div>
+		</article>
+	</div>
+</section>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="../../static/hui/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../../static/hui/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="../../static/hui/static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="../../static/hui/static/h-ui.admin/js/H-ui.admin.page.js"></script>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="../../static/hui/lib/hcharts/Highcharts/5.0.6/js/highcharts.js"></script>
+<script type="text/javascript" src="../../static/hui/lib/hcharts/Highcharts/5.0.6/js/modules/exporting.js"></script>
+<script type="text/javascript">
+$(function () {
+    $('#container').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: '视频分类统计'
+        },
+        subtitle: {
+            text: '各分类视频发布条数'
+        },
+        xAxis: {
+            categories: json_data().categories
+		// 	["北京", "天津", "上海", "重庆", "新疆", "西藏", "宁夏", "内蒙古",
+		// 			"广西", "黑龙江", "吉林", "辽宁", "河北", "山东", "江苏", "安徽",
+		// 	"浙江", "福建", "广东", "海南", "云南", "贵州", "四川", "湖南",
+		// 	"湖北", "河南", "山西", "陕西", "甘肃", "青海", "江西", "台湾", "香港", "澳门"]
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: '单位（条）'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} 条</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: '视频分类',
+            data: json_data().data
+
+        }]
+    });
+});
+function json_data() {
+	var info = {}
+	info['categories']=[]
+	info['data']=[]
+	$.ajax({
+		url: '/api/chart?key=word',
+		type: 'GET',
+		contentType: 'application/json',
+		async: false,
+		beforeSend: function (xhr) {
+			xhr.setRequestHeader('Authorization', $.cookie('token'));
+		},
+		success: function (res) {
+			var data = res.data
+			$.each(data, function (v) {
+				info['categories'].push(v)
+				info['data'].push(data[v])
+			})
+		}
+	})
+	console.log(info)
+	return info
+}
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

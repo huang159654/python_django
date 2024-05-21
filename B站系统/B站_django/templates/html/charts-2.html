@@ -1,0 +1,158 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="favicon.ico" >
+<link rel="Shortcut Icon" href="favicon.ico" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="../../static/hui/lib/html5shiv.js"></script>
+<script type="text/javascript" src="../../static/hui/lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../../static/hui/static/h-ui/css/H-ui.min.css" />
+<!--<link rel="stylesheet" type="text/css" href="../../static/hui/static/h-ui.admin/css/H-ui.admin.css" />-->
+<link rel="stylesheet" type="text/css" href="../../static/hui/lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="../../static/hui/static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="../../static/hui/static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="../../static/hui/lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script><![endif]-->
+<!--/meta 作为公共模版分离出去-->
+
+<title>词云图</title>
+</head>
+<body>
+<!--_header 作为公共模版分离出去-->
+<div id="header"></div>
+<!--/_header 作为公共模版分离出去-->
+
+<!--_menu 作为公共模版分离出去-->
+<!--/_menu 作为公共模版分离出去-->
+
+<section class="Hui-article-box">
+	<div class="Hui-article">
+		<article class="cl pd-20">
+			<div id="container" style="min-width:900px;height:600px"></div>
+		</article>
+	</div>
+</section>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="../../static/hui/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../../static/hui/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="../../static/hui/static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="../../static/hui/static/h-ui.admin/js/H-ui.admin.page.js"></script>
+<!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="../../static/hui/lib/hcharts/Highcharts/5.0.6/js/highcharts.js"></script>
+<script type="text/javascript" src="../../static/hui/lib/hcharts/Highcharts/5.0.6/js/modules/exporting.js"></script>
+<script type="text/javascript" src="../../static/hui/lib/echarts/echarts-master/dist/echarts.js"></script>
+<script type="text/javascript" src="../../static/js/echarts-wordcloud.js"></script>
+<script type="text/javascript">
+	// 基于准备好的dom，初始化echarts实例
+	var myChart = echarts.init(document.getElementById('container'));
+
+	// 指定图表的配置项和数据
+	var option = {
+		title: {
+			text: '评论词云图',
+			subtext: '评论中出现最多的150个词汇',
+			left: 'center'
+		},
+		tooltip: {},
+		series: [
+			{
+				type : 'wordCloud',  //类型为字符云
+				shape:'smooth',  //平滑
+				gridSize : 8, //网格尺寸
+				size : ['100%','100%'],
+				//sizeRange : [ 50, 100 ],
+				rotationRange : [-45, 0, 45, 90], //旋转范围
+				textStyle : {
+					normal : {
+						fontFamily:'微软雅黑',
+						color: function() {
+							return 'rgb(' +
+									Math.round(Math.random() * 255) +
+									', ' + Math.round(Math.random() * 255) +
+									', ' + Math.round(Math.random() * 255) + ')'
+						}
+					},
+					emphasis : {
+						shadowBlur : 5,  //阴影距离
+						shadowColor : '#333'  //阴影颜色
+					}
+				},
+				left: 'center',
+				top: '-10%',
+				right: null,
+				bottom: null,
+				width:'100%',
+				height:'100%',
+				data: json_data(),
+				// 		[
+				// 	{value: 335, name: 'Hbase'},
+				// 	{value: 310, name: 'fastDFS'},
+				// 	{value: 234, name: 'Kafaka'},
+				// 	{value: 435, name: 'Vue'},
+				// 	{value: 1548, name: 'Jquery'},
+				// 	{value: 310, name: 'MongoDB'},
+				// 	{value: 1400, name: 'Mysql'},
+				// 	{value: 1350, name: 'Redis'},
+				// 	{value: 5548, name: 'Java'},
+				//
+				// 	{value: 350, name: 'Mysql'},
+				// 	{value: 2010, name: 'Oracle'},
+				// 	{value: 234, name: 'Redis'},
+				// 	{value: 2345, name: 'Html'},
+				// 	{value: 138, name: 'Jquery'},
+				// 	{value: 310, name: 'CSS'},
+				// 	{value: 1400, name: 'H5'},
+				// 	{value: 135, name: 'Aof'},
+				// 	{value: 253, name: 'Rdb'},
+				//
+				// 	{value: 3135, name: '多线程'},
+				// 	{value: 305, name: 'JVM虚拟机'},
+				// 	{value: 2234, name: '进程与线程'},
+				// 	{value: 435, name: '接口'},
+				// 	{value: 1580, name: '类'},
+				// 	{value: 510, name: '多态'},
+				// 	{value: 3600, name: '散点图'},
+				// 	{value: 2350, name: '聚点图'},
+				// 	{value: 650, name: '热点图'}
+				// ],
+			}
+		]
+	};
+
+	// 使用刚指定的配置项和数据显示图表。
+	myChart.setOption(option);
+
+function json_data() {
+	var json_data = []
+	$.ajax({
+		url: '/api/chart?key=cloud',
+		type: 'GET',
+		contentType: 'application/json',
+		async: false,
+		beforeSend: function (xhr) {
+			xhr.setRequestHeader('Authorization', $.cookie('token'));
+		},
+		success: function (res) {
+			json_data=res.data
+		}
+	})
+	console.log(json_data)
+	return json_data
+}
+
+
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="../../static/hui/lib/html5shiv.js"></script>
+<script type="text/javascript" src="../../static/hui/lib/respond.min.js"></script>
+<![endif]-->
+<link href="../../static/hui/static/h-ui/css/H-ui.min.css" rel="stylesheet" type="text/css" />
+<link href="../../static/hui/static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+<link href="../../static/hui/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="../../static/hui/http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script><![endif]-->
+<title>用户查看</title>
+</head>
+<body>
+<div class="cl pd-20" style=" background-color:#5bacb6">
+  <img id="image" class="avatar size-XL l" src="../../static/hui/static/h-ui/images/user.png">
+  <dl style="margin-left:80px; color:#fff">
+    <dt><span class="f-18" id="username">张三</span> <span class="pl-10 f-12" id="balance">余额：40</span></dt>
+    <dd class="pt-10 f-12" style="margin-left:0" id="describe">这家伙很懒，什么也没有留下</dd>
+  </dl>
+</div>
+<div class="pd-20">
+  <table class="table">
+    <tbody>
+      <tr>
+        <th class="text-r" width="80">性别：</th>
+        <td id="gender">男</td>
+      </tr>
+      <tr>
+        <th class="text-r">手机：</th>
+        <td id="mobile">13000000000</td>
+      </tr>
+      <tr>
+        <th class="text-r">邮箱：</th>
+        <td id="email">admin@mail.com</td>
+      </tr>
+      <tr>
+        <th class="text-r">地址：</th>
+        <td id="address">北京市 海淀区</td>
+      </tr>
+      <tr>
+        <th class="text-r">注册时间：</th>
+        <td id="join">2014.12.20</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="../../static/hui/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../../static/hui/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="../../static/hui/static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="../../static/hui/static/h-ui.admin/js/H-ui.admin.page.js"></script>
+<script type="text/javascript" src="../../static/js/params.js"></script>
+<script type="text/javascript" src="../../static/js/date.js"></script>
+<!--/_footer /作为公共模版分离出去-->
+<script>
+  $(function () {
+    var userid = getParams('id')
+    console.log(userid)
+    $.ajax({
+      url:'/api/user/'+userid.id+'/',
+      type: 'GET',
+      contentType: 'application',
+      async:false,
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader('Authorization', $.cookie('token'));
+      },
+      success: function (res) {
+        var gender
+        if (res.gender === 0){gender='女'} else if(res.gender===1){gender='男'} else{gender='未知'}
+        var date = dateChangeFormat('YYYY-mm-dd HH:MM:SS', res.last_login)
+        console.log(res.gender)
+        $("#username").html(res.username)
+        $("#email").html(res.email)
+        $("#mobile").html(res.mobile)
+        $("#address").html(res.username)
+        $("#join").html(date)
+        $("#gender").html(gender)
+        console.log(res)
+      }
+    })
+    $.ajax({
+      url: '/api/head/?uid='+userid.id,
+      type: 'GET',
+      contentType: 'application/json',
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader('Authorization', $.cookie('token'));
+      },
+      success: function (res) {
+        var src = res.data
+        $("#image").attr('src', src)
+      }
+    })
+  })
+</script>
+</body>
+</html>

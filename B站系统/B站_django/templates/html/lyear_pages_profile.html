@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+<meta name="keywords" content="LightYear,LightYearAdmin,光年,后台模板,后台管理系统,光年HTML模板">
+<meta name="description" content="Light Year Admin V5是一个基于Bootstrap v5.1.3的后台管理系统的HTML模板。">
+<title>个人信息</title>
+<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-touch-fullscreen" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" type="text/css" href="../../static/css/materialdesignicons.min.css">
+<link rel="stylesheet" type="text/css" href="../../static/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="../../static/css/style.min.css">
+</head>
+  
+<body>
+<div class="container-fluid">
+  
+  <div class="row">
+    
+    <div class="col-lg-12">
+      <div class="card">
+        <header class="card-header"><div class="card-title">个人信息</div></header>
+        <div class="card-body">
+          <div class="d-flex">
+            <img src="../../static/images/users/avatar.jpg" alt="..." class="avatar-xl rounded-circle me-3" id="image">
+            <div class="flex-grow-1">
+              <button class="btn btn-default" id="ID-upload-demo-btn">修改头像</button>
+              <p class="mt-1 mb-0">选择一张你喜欢的图片，裁剪后会自动生成264x264大小，上传图片大小不能超过2M。</p>
+            </div>
+          </div>
+          <hr>
+          <form method="" action="#!" class="site-form">
+            <div class="mb-3">
+              <label for="username">用户名</label>
+              <input type="text" class="form-control" name="username" id="username" value="lightyear" disabled="disabled">
+            </div>
+            <div class="mb-3">
+              <label for="mobile">电话</label>
+              <input type="text" class="form-control" name="mobile" id="mobile" placeholder="输入您的电话" value="13888888888">
+            </div>
+            <div class="mb-3">
+              <label for="email">邮箱</label>
+              <input type="email" class="form-control" name="email" id="email" aria-describedby="emailHelp" placeholder="请输入正确的邮箱地址" value="3331653644@qq.com">
+              <small id="emailHelp" class="form-text text-muted">请保证您填写的邮箱地址是正确的。</small>
+            </div>
+            <div class="mb-3">
+              <label for="address">地址</label>
+              <input type="address" class="form-control" name="email" id="address" aria-describedby="emailHelp" placeholder="请输入地址" value="XXX省XXX市XXX区">
+              <small class="form-text text-muted">请填写您的地址。</small>
+            </div>
+            <button type="submit" class="btn btn-primary" id="submit">保存</button>
+          </form>
+          
+        </div>
+      </div>
+    </div>
+        
+  </div>
+  
+</div>
+<script type="text/javascript" src="../../static/js/jquery.min.js"></script>
+<script type="text/javascript" src="../../static/js/jquery.cookie.js"></script>
+<script type="text/javascript" src="../../static/js/params.js"></script>
+<script type="text/javascript" src="../../static/js/popper.min.js"></script>
+<script type="text/javascript" src="../../static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="../../static/js/main.min.js"></script>
+<script type="text/javascript" src="../../static/js/layui/layui.js"></script>
+<script type="text/javascript" src="../../static/hui/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="../../static/js/jquery.cookie.js"></script>
+<style>
+  .layui-upload-file{
+    display: none !important;;
+  }
+</style>
+<script>
+  $(function () {
+    $.ajax({
+      url:'/api/user/'+$.cookie('user_id')+'/',
+      type:'GET',
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader('Authorization', $.cookie('token'));
+      },
+      success: function (res) {
+        $("#username").val(res.username)
+        $("#mobile").val(res.mobile)
+        $("#email").val(res.email)
+        $("#address").val(res.address)
+      }
+    })
+    $.ajax({
+      url: '/api/head/?uid='+$.cookie('user_id'),
+      type: 'GET',
+      contentType: 'application/json',
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader('Authorization', $.cookie('token'));
+      },
+      success: function (res) {
+        var src = res.data
+        $("#image").attr('src', src)
+      }
+    })
+  })
+  $("#submit").on('click', function () {
+    var mobile = $("#mobile").val()
+    var email = $("#email").val()
+    var address = $("#address").val()
+    var data = JSON.stringify({'mobile':mobile, 'email': email, 'address': address})
+    $.ajax({
+      url:'/api/user/'+$.cookie('user_id')+'/',
+      type:'PATCH',
+      data:data,
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader('Authorization', $.cookie('token'));
+      },
+      success: function (res) {
+       console.log(res)
+      }
+    })
+  })
+  layui.use(function(){
+    var upload = layui.upload;
+    var layer = layui.layer;
+    var element = layui.element;
+    var $ = layui.$;
+    var id = $.cookie('user_id')
+    console.log(id)
+    // 单图片上传
+    var uploadInst = upload.render({
+      elem: '#ID-upload-demo-btn',
+      data: {'uid': id},
+      headers:{'Authorization': $.cookie('token')},
+      url: '/api/head/', // 实际使用时改成您自己的上传接口即可。,
+      before: function(obj){
+        // 预读本地文件示例，不支持ie8
+        obj.preview(function(index, file, result){
+          console.log(file)
+          $('#image').attr('src', result); // 图片链接（base64）
+        });
+        element.progress('filter-demo', '0%'); // 进度条复位
+        layer.msg('上传中', {icon: 16, time: 0});
+      },
+
+      done: function(res){
+        // 若上传失败
+        if(res.code > 0){
+          return layer.msg('上传成功');
+        }
+        // 上传成功的一些操作
+        // …
+        $('#ID-upload-demo-text').html(''); // 置空上传失败的状态
+      },
+      error: function(){
+        // 演示失败状态，并实现重传
+        var demoText = $('#ID-upload-demo-text');
+        demoText.html('<span style="color: #FF5722;">上传成功</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+        demoText.find('.demo-reload').on('click', function(){
+          uploadInst.upload();
+        });
+      },
+      // 进度条
+      progress: function(n, elem, e){
+        element.progress('filter-demo', n + '%'); // 可配合 layui 进度条元素使用
+        if(n == 100){
+          layer.msg('上传完毕', {icon: 1});
+        }
+      }
+    });
+  });
+</script>
+</body>
+</html>

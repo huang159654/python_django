@@ -1,0 +1,227 @@
+<!--_meta 作为公共模版分离出去-->
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<link rel="Bookmark" href="favicon.ico" >
+<link rel="Shortcut Icon" href="favicon.ico" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="../../static/hui/lib/html5shiv.js"></script>
+<script type="text/javascript" src="../../static/hui/lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="../../static/hui/static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="../../static/hui/static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="../../static/hui/lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="../../static/hui/static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="../../static/hui/static/h-ui.admin/css/style.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script><![endif]-->
+<!--/meta 作为公共模版分离出去-->
+
+<title>添加用户</title>
+</head>
+<body>
+<article class="cl pd-20">
+	<form class="form form-horizontal" id="form-member-add">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>爬虫名称：</label>
+			<div class="formControls col-xs-8 col-sm-9" id="spider_in_name">
+				<input type="text" class="input-text" value="" placeholder="" id="spider_name" name="spider_name">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>爬取字段：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<label for="role_list">
+					<select class="input-text" id="spider_field">
+<!--						<option class="input-text" value="" selected>&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;爬取字段&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;</option>-->
+					<!--                      <option value="1">教师</option>-->
+					<!--                      <option value="2">教研室主任</option>-->
+					<!--                      <option value="3">院系主任</option>-->
+					</select>
+				</label>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3"><span class="c-red"></span>爬取页数：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" value="1" placeholder="" id="spider_page" name="spider_page">
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-3">
+				<input id="submit" class="btn btn-primary radius" type="submit" value="&nbsp;&nbsp;提交&nbsp;&nbsp;">
+				{% csrf_token %}
+			</div>
+		</div>
+	</form>
+</article>
+
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="../../static/hui/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="../../static/hui/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="../../static/hui/static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="../../static/hui/static/h-ui.admin/js/H-ui.admin.page.js"></script>
+<!--/_footer /作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="../../static/js/params.js"></script>
+<script type="text/javascript" src="../../static/hui/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="../../static/hui/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="../../static/hui/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="../../static/hui/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+
+<script type="text/javascript">
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+	$("#form-member-add").validate({
+		rules:{
+			spider_name:{
+				required:true,
+				minlength:2,
+				maxlength:16
+			},
+			spider_field:{
+				required:true,
+				minlength:2,
+				maxlength:16
+			},
+			spider_page:{
+				required:true,
+				minlength:1,
+				maxlength:16
+			},
+
+			
+		},
+		onkeyup:false,
+		focusCleanup:true,
+		success:"valid",
+		// submitHandler:function(form){
+		// 	var spider_name = $("#spider_name").val()
+		// 	var spider_field = $("#spider_field").val()
+		// 	var spider_page = $("#spider_page").val()
+		// 	// var csrftoken = $("[name=csrfmiddlewaretoken]")
+		// 	var json_data = {
+		// 		"spider_name":spider_name,
+		// 		"spider_field":spider_field,
+		// 		"spider_page":spider_page,
+		// 	}
+		// 	console.log(json_data)
+		// 	$(form).ajaxSubmit({
+		// 		url: '/api/spider/',
+		// 		type: 'post',
+		// 		contentType: 'application/json',
+		// 		dataType: 'json',
+		// 		async: false,
+		// 		data: json_data,
+		// 		beforeSend: function (xhr) {
+		// 			xhr.setRequestHeader('Authorization', $.cookie('token'));
+		// 		},
+		// 		success:function (res) {
+		// 			console.log(res.msg)
+		// 		}
+		// 	});
+		// 	var index = parent.layer.getFrameIndex(window.name);
+		// 	parent.$('.btn-refresh').click();
+		// 	parent.layer.close(index);
+		// }
+	});
+	var spider_id = getParams('id').id
+	var data = get_spider(spider_id)
+	if (spider_id){
+		console.log(data)
+		$("#spider_name").val(data.spider_name).prop('readonly', true)
+		$("#spider_field").val(data.spider_field).prop('readonly', true)
+		$("#spider_field").append(
+				"<option value=\""+data.id+"\">"+data.spider_field+"</option>"
+		)
+	}else{
+		$("#spider_name").val(data.spider_name)
+		$("#spider_field").val(data.spider_field)
+		$.each(data.field.field, function (i) {
+			$("#spider_field").append(
+					"<option value=\""+i+"\">"+data.field.field[i]+"</option>"
+			)
+		})
+	}
+
+});
+
+$("#submit").on('click', function () {
+	var spider_id = getParams('id').id
+	console.log(spider_id)
+	var spider_name = $("#spider_name").val()
+	var spider_field = $("#spider_field").val()
+	var spider_page = $("#spider_page").val()
+	var csrftoken = $("[name=csrfmiddlewaretoken]")
+	var json_data = JSON.stringify({
+        "spider_name":spider_name,
+        "spider_field":spider_field,
+        "spider_page":spider_page,
+	})
+	if (spider_id){
+		$.ajax({
+			url: '/api/spider/'+spider_id+'/',
+			type: 'PATCH',
+			contentType: 'application/json',
+			async: false,
+			data: json_data,
+			beforeSend: function (xhr) {
+				xhr.setRequestHeader('Authorization', $.cookie('token'));
+			},
+			success: function (res) {
+				console.log(res)
+				layer.msg('返回爬虫列表页!',{icon:6,time:1000})
+				window.close()
+
+			}
+		})
+	}else{
+		$.ajax({
+			url: '/api/spider/',
+			type: 'POST',
+			contentType: 'application/json',
+			async: false,
+			data: json_data,
+			beforeSend: function (xhr) {
+				xhr.setRequestHeader('Authorization', $.cookie('token'));
+			},
+			success: function (res) {
+				console.log(res.msg)
+			}
+		})
+	}
+
+})
+function get_spider(id) {
+	var data = ''
+	var url = ''
+	if (id){url='/api/spider/'+id+'/'}else{url='/api/spider'}
+	$.ajax({
+		url: url,
+		type: 'get',
+		contentType: 'application/json',
+		async: false,
+		beforeSend: function (xhr) {
+			xhr.setRequestHeader('Authorization', $.cookie('token'));
+		},
+		success: function (res) {
+			data = res
+		}
+	})
+	return data
+}
+</script> 
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>
